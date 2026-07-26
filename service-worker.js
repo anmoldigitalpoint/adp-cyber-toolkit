@@ -1,4 +1,4 @@
-const CACHE_NAME = "adp-suite-v2";
+const CACHE_NAME = "adp-suite-v3";
 
 const APP_SHELL = [
   "./",
