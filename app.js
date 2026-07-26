@@ -284,6 +284,25 @@ function showInstallBanner(){
   document.getElementById("ibClose").addEventListener("click", () => { localStorage.setItem("adp_install_dismissed","1"); el.remove(); });
 }
 
+/* ---------------- Mobile bottom tab bar ---------------- */
+function initBottomNav(){
+  const nav = document.getElementById("bottomNav");
+  if (!nav) return;
+  nav.querySelectorAll(".bn-item").forEach(btn => {
+    btn.addEventListener("click", () => {
+      nav.querySelectorAll(".bn-item").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const target = btn.getAttribute("data-target");
+      if (target === "home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const el = document.getElementById(target);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+}
+
 /* ---------------- Boot ---------------- */
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
@@ -296,4 +315,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initSearch();
   initWhatsAppPopup();
   initPWA();
+  initBottomNav();
 });
