@@ -128,3 +128,97 @@ function fileToCanvas(file){
 function canvasToBlob(canvas, type = "image/jpeg", quality = 0.92){
   return new Promise(resolve => canvas.toBlob(resolve, type, quality));
 }
+
+/* ---------------- Real document-edge detection (OpenCV.js) ---------------- */
+
+let _cvLoadingPromise = null;
+function loadOpenCV(){
+  if (window.cv && window.cv.Mat) return Promise.resolve();
+  if (_cvLoadingPromise) return _cvLoadingPromise;
+  _cvLoadingPromise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "https://docs.opencv.org/4.8.0/opencv.js";
+    script.async = true;
+    script.onload = () => {
+      if (window.cv && window.cv.Mat) resolve();
+      else window.cv["onRuntimeInitialized"] = resolve;
+    };
+    script.onerror = () => reject(new Error("Could not load the scanner engine - check your internet connection."));
+    document.head.appendChild(script);
+  });
+  return _cvLoadingPromise;
+}
+
+function detectAndWarpDocument(sourceCanvas){
+  if (!window.cv || !cv.Mat) return null;
+  let src, gray, blurred, edges, dilated, contours, hierarchy, bestApprox = null;
+  try {
+    src = cv.imread(sourceCanvas);
+    gray = new cv.Mat(); cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+    blurred = new cv.Mat(); cv.GaussianBlur(gray, blurred, new cv.Size(5,5), 0);
+    edges = new cv.Mat(); cv.Canny(blurred, edges, 50, 150);
+    const kernel = cv.Mat.ones(3,3, cv.CV_8U);
+    dilated = new cv.Mat(); cv.dilate(edges, dilated, kernel);
+    kernel.delete();
+    contours = new cv.MatVector(); hierarchy = new cv.Mat();
+    cv.findContours(dilated, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
+
+    let maxArea = 0;
+    const minArea = src.rows * src.cols * 0.15;
+    for (let i = 0; i < contours.size(); i++){
+      const cnt = contours.get(i);
+      const peri = cv.arcLength(cnt, true);
+      const approx = new cv.Mat();
+      cv.approxPolyDP(cnt, approx, 0.02 * peri, true);
+      if (approx.rows === 4){
+        const area = cv.contourArea(approx);
+        if (area > maxArea && area > minArea){
+          maxArea = area;
+          if (bestApprox) bestApprox.delete();
+          bestApprox = approx;
+        } else approx.delete();
+      } else approx.delete();
+      cnt.delete();
+    }
+
+    if (!bestApprox) return null;
+
+    const pts = [];
+    for (let i = 0; i < 4; i++) pts.push({ x: bestApprox.data32S[i*2], y: bestApprox.data32S[i*2+1] });
+    pts.sort((a,b) => a.y - b.y);
+    const top = pts.slice(0,2).sort((a,b) => a.x - b.x);
+    const bottom = pts.slice(2,4).sort((a,b) => a.x - b.x);
+    const [tl, tr] = top, [bl, br] = bottom;
+
+    const widthA = Math.hypot(br.x-bl.x, br.y-bl.y), widthB = Math.hypot(tr.x-tl.x, tr.y-tl.y);
+    const maxWidth = Math.round(Math.max(widthA, widthB));
+    const heightA = Math.hypot(tr.x-br.x, tr.y-br.y), heightB = Math.hypot(tl.x-bl.x, tl.y-bl.y);
+    const maxHeight = Math.round(Math.max(heightA, heightB));
+    if (maxWidth < 40 || maxHeight < 40) { bestApprox.delete(); return null; }
+
+    const srcTri = cv.matFromArray(4,1,cv.CV_32FC2,[tl.x,tl.y, tr.x,tr.y, br.x,br.y, bl.x,bl.y]);
+    const dstTri = cv.matFromArray(4,1,cv.CV_32FC2,[0,0, maxWidth,0, maxWidth,maxHeight, 0,maxHeight]);
+    const M = cv.getPerspectiveTransform(srcTri, dstTri);
+    const dst = new cv.Mat();
+    cv.warpPerspective(src, dst, M, new cv.Size(maxWidth, maxHeight));
+
+    const outCanvas = document.createElement("canvas");
+    cv.imshow(outCanvas, dst);
+
+    srcTri.delete(); dstTri.delete(); M.delete(); dst.delete(); bestApprox.delete();
+    return outCanvas;
+  } catch (e){
+    console.error("Document edge detection failed:", e);
+    return null;
+  } finally {
+    if (src) src.delete(); if (gray) gray.delete(); if (blurred) blurred.delete();
+    if (edges) edges.delete(); if (dilated) dilated.delete();
+    if (contours) contours.delete(); if (hierarchy) hierarchy.delete();
+  }
+}
+
+function smartDocumentCrop(sourceCanvas, options = {}){
+  const warped = detectAndWarpDocument(sourceCanvas);
+  if (warped) return warped;
+  return autoCropCanvas(sourceCanvas, options);
+}
