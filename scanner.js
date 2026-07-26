@@ -24,6 +24,8 @@ function open_multi_scanner(){
 
   let pages = []; // array of {canvas}
   let stream = null;
+  let cvReady = false;
+  loadOpenCV().then(() => { cvReady = true; }).catch(() => { showToast("Scanner engine failed to load - using the basic crop instead."); });
 
   function renderThumbs(){
     const grid = document.getElementById("ms-thumbs");
@@ -68,7 +70,7 @@ function open_multi_scanner(){
 
   async function processFile(file){
     const raw = await fileToCanvas(file);
-    const cropped = autoCropCanvas(raw, { threshold: 24 });
+    const cropped = smartDocumentCrop(raw, { threshold: 24 });
     const clean = enhanceCanvas(cropped, { brightness: 10, contrast: 16 });
     pages.push({ canvas: clean });
     renderThumbs();
@@ -90,7 +92,7 @@ function open_multi_scanner(){
     const c = document.createElement("canvas");
     c.width = video.videoWidth; c.height = video.videoHeight;
     c.getContext("2d").drawImage(video, 0, 0);
-    const cropped = autoCropCanvas(c, { threshold: 24 });
+    const cropped = smartDocumentCrop(c, { threshold: 24 });
     const clean = enhanceCanvas(cropped, { brightness: 10, contrast: 16 });
     pages.push({ canvas: clean });
     renderThumbs();
@@ -143,6 +145,7 @@ function open_camera_scanner(){
   `);
   const video = document.getElementById("cs-video");
   let stream = null, resultCanvas = null;
+  loadOpenCV().catch(() => {});
   navigator.mediaDevices?.getUserMedia({ video: { facingMode: "environment" } })
     .then(s => { stream = s; video.srcObject = s; })
     .catch(() => showToast("Camera not available on this device."));
@@ -152,7 +155,7 @@ function open_camera_scanner(){
     const c = document.createElement("canvas");
     c.width = video.videoWidth; c.height = video.videoHeight;
     c.getContext("2d").drawImage(video,0,0);
-    resultCanvas = enhanceCanvas(autoCropCanvas(c, { threshold: 24 }), { brightness: 10, contrast: 16 });
+    resultCanvas = enhanceCanvas(smartDocumentCrop(c, { threshold: 24 }), { brightness: 10, contrast: 16 });
     const out = document.getElementById("cs-out");
     out.width = resultCanvas.width; out.height = resultCanvas.height;
     out.getContext("2d").drawImage(resultCanvas, 0, 0);
