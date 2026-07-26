@@ -129,7 +129,12 @@ function canvasToBlob(canvas, type = "image/jpeg", quality = 0.92){
   return new Promise(resolve => canvas.toBlob(resolve, type, quality));
 }
 
-/* ---------------- Real document-edge detection (OpenCV.js) ---------------- */
+/* ---------------- Real document-edge detection (OpenCV.js) ----------------
+   The simple corner-brightness trim above (autoCropCanvas) works only for very
+   high-contrast, evenly-lit photos. For real phone photos of ID cards / pages on
+   a table, proper edge detection + perspective correction is needed. This loads
+   OpenCV.js on demand (only when a scanner tool is opened) and finds the largest
+   four-corner shape in the photo, then straightens it into a flat rectangle. */
 
 let _cvLoadingPromise = null;
 function loadOpenCV(){
@@ -164,7 +169,7 @@ function detectAndWarpDocument(sourceCanvas){
     cv.findContours(dilated, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
 
     let maxArea = 0;
-    const minArea = src.rows * src.cols * 0.15;
+    const minArea = src.rows * src.cols * 0.15; // ignore tiny/noise shapes
     for (let i = 0; i < contours.size(); i++){
       const cnt = contours.get(i);
       const peri = cv.arcLength(cnt, true);
@@ -217,8 +222,10 @@ function detectAndWarpDocument(sourceCanvas){
   }
 }
 
+/* Tries real edge-detection + perspective correction first; only falls back to the
+   simpler background-trim heuristic if OpenCV isn't loaded or no clean 4-corner shape is found. */
 function smartDocumentCrop(sourceCanvas, options = {}){
   const warped = detectAndWarpDocument(sourceCanvas);
   if (warped) return warped;
   return autoCropCanvas(sourceCanvas, options);
-}
+      }
