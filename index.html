@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ANMOL DIGITAL POINT - ADP Digital Suite | India's Smart Cyber Cafe Toolkit</title>
+<meta name="description" content="All your Cyber Cafe tools in one place - PDF tools, document printing, resume builder, passport photo maker, smart document scanner, image tools, QR tools and more.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e17">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <a href="#" class="dash-link">📊 Dashboard</a>
+    <div class="cat-label">Categories</div>
+    <div id="sidebarCats"></div>
+  </aside>
+  <div class="sidebar-backdrop hidden" id="sidebarBackdrop"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="navbar">
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+    <a href="index.html" class="brand">
+      <div class="brand-badge">ADP</div>
+      <div class="brand-text">
+        <div class="name">ANMOL DIGITAL POINT</div>
+        <div class="tagline">ADP Digital Suite</div>
+      </div>
+    </a>
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search tools...">
+      <kbd>Ctrl+K</kbd>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="#allTools">All Tools</a>
+      <a href="#categories">Categories</a>
+      <a href="#footerContact">Contact</a>
+      <a href="#footerContact">About</a>
+    </nav>
+    <button class="icon-btn" id="themeToggle" title="Toggle dark / light">🌙</button>
+    <button class="icon-btn hidden" id="installBtn" title="Install app">⬇️</button>
+    <a class="wa-chip" href="https://whatsapp.com/channel/0029Va5tM43KwqSYrnKWs532" target="_blank" rel="noopener">
+      💬 <span>WhatsApp Channel</span>
+    </a>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div>
+        <span class="eyebrow">India's Smart Cyber Cafe Toolkit</span>
+        <h1>ANMOL DIGITAL POINT</h1>
+        <h2>ADP Digital Suite</h2>
+        <p>All your Cyber Cafe tools in one place. PDF tools, document printing, resume builder, passport photo maker, smart document scanner, image tools, QR tools and many more in one professional platform.</p>
+        <div class="hero-actions">
+          <a href="#allTools" class="btn btn-primary">🚀 Get Started</a>
+          <a href="#allTools" class="btn btn-outline">▦ Explore All Tools</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="float-card" style="top:14%; left:8%;">📄 PDF Tools</div>
+        <div class="float-card" style="top:50%; left:55%;">🪪 ID Card Print</div>
+        <div class="float-card" style="top:74%; left:12%;">📃 Resume Builder</div>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <div class="section-head" id="categories">
+      <h3>Popular Categories</h3>
+      <a href="#allTools">View All →</a>
+    </div>
+    <div class="cat-grid" id="catGrid"></div>
+
+    <div class="content-grid">
+      <div>
+        <!-- ALL TOOLS -->
+        <div class="section-head" id="allTools">
+          <h3>All Tools</h3>
+        </div>
+        <div class="filter-row" id="filterRow"></div>
+        <div class="tool-grid" id="toolGrid"></div>
+      </div>
+
+      <!-- RIGHT RAIL -->
+      <div>
+        <div class="rail-card">
+          <h4>⚡ Quick Access</h4>
+          <div id="quickAccess"></div>
+        </div>
+        <div class="rail-card">
+          <h4>⭐ Popular Tools</h4>
+          <div id="popularTools"></div>
+        </div>
+        <div class="rail-card">
+          <h4>🕒 Recently Used</h4>
+          <div id="recentlyUsed"><div class="rail-empty">Tools you open will show up here.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer id="footerContact">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">
+        <div class="brand-badge">ADP</div>
+        <div>
+          <div style="font-weight:800;">ANMOL DIGITAL POINT</div>
+          <div style="font-size:12px;color:var(--text-faint);">ADP Digital Suite</div>
+        </div>
+      </div>
+      <p>India's Smart Cyber Cafe Toolkit — all digital tools in one platform, fast, easy and professional.</p>
+      <div class="social-row">
+        <a href="https://whatsapp.com/channel/0029Va5tM43KwqSYrnKWs532" target="_blank" rel="noopener">💬</a>
+        <a href="https://www.instagram.com/akelatechnical" target="_blank" rel="noopener">📷</a>
+        <a href="https://www.youtube.com/@akelatechnical1" target="_blank" rel="noopener">▶️</a>
+      </div>
+    </div>
+    <div>
+      <h5>Contact Us</h5>
+      <a href="tel:+916207120625">📞 6207120625</a>
+      <a href="https://whatsapp.com/channel/0029Va5tM43KwqSYrnKWs532" target="_blank" rel="noopener">💬 WhatsApp Channel</a>
+    </div>
+    <div>
+      <h5>Address</h5>
+      <p>Main Road Rupow,<br>Near Charaul Gate,<br>Nawada, Bihar, India</p>
+    </div>
+    <div>
+      <h5>Legal</h5>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="disclaimer.html">Disclaimer</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 ANMOL DIGITAL POINT — ADP Digital Suite. All Rights Reserved.</div>
+</footer>
+
+<!-- Floating WhatsApp button -->
+<a class="wa-float" href="https://whatsapp.com/channel/0029Va5tM43KwqSYrnKWs532" target="_blank" rel="noopener" aria-label="Join WhatsApp Channel">💬</a>
+
+<!-- Tool modal mount point -->
+<div id="modalMount"></div>
+
+<!-- Toast mount -->
+<div id="toastMount"></div>
+
+<!-- ================= LIBRARIES (CDN) ================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.5/JsBarcode.all.min.js"></script>
+
+<!-- ================= APP SCRIPTS ================= -->
+<script src="js/tools-data.js"></script>
+<script src="js/helpers.js"></script>
+<script src="js/pdf-tools.js"></script>
+<script src="js/image-tools.js"></script>
+<script src="js/scanner.js"></script>
+<script src="js/qr-tools.js"></script>
+<script src="js/utility-tools.js"></script>
+<script src="js/passport-photo.js"></script>
+<script src="js/id-card.js"></script>
+<script src="js/resume-builder.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
