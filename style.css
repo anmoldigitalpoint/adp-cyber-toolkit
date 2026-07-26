@@ -448,3 +448,23 @@ footer{
   background:var(--bg-2); border:1px solid var(--panel-border); padding:12px 20px; border-radius:12px;
   font-size:13.5px; z-index:400; box-shadow:var(--shadow); display:flex; gap:8px; align-items:center;
 }
+/* ---------- Mobile bottom tab bar ---------- */
+.bottom-nav{
+  display:none;
+  position:fixed; left:0; right:0; bottom:0; z-index:160;
+  background:var(--bg-2); border-top:1px solid var(--panel-border);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  box-shadow:0 -6px 20px rgba(0,0,0,0.35);
+}
+@media (max-width:960px){
+  .bottom-nav{display:flex;}
+  main{padding-bottom:78px;}
+  .wa-float{bottom:78px;}
+  .install-banner{bottom:78px;}
+}
+.bn-item{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+  background:none; border:none; color:var(--text-faint); font-size:18px; padding:6px 2px; border-radius:10px;
+}
+.bn-item span{font-size:10.5px; font-weight:700;}
+.bn-item.active{color:var(--blue-light);}
